@@ -105,9 +105,23 @@ When `needs_more_info` is `false`, `service` holds the recommended service (name
 | Service data `backend/data/Data_caritas_expanded.xlsx` | **Not in the repo**: add it before running the retrieval CLI or eval |
 | Frontend | **Not in the repo**: see `docs/Frontend_Spec_AI_Service_Navigator.pdf` |
 
-## Team
+## Backend ownership
 
 The backend was split between two owners, and `contracts.py` is the agreed interface between them:
 
 - **Person A, voice and API:** `main.py`, `voice/`, `sessions.py`, `errors.py`, `mock.py`
 - **Person B, brain:** `brain/`, `data/`, `tests/`
+
+## Team and contact
+
+Feel free to reach out to any of us:
+
+| Name | Email |
+|---|---|
+| Rishabh Jain | [official.rishabh.info@gmail.com](mailto:official.rishabh.info@gmail.com) |
+| Harshavardini Gowrisankar | [Harshahasini1998@gmail.com](mailto:Harshahasini1998@gmail.com) |
+| Deekshith Jagadeesh | [deekshithj1021@gmail.com](mailto:deekshithj1021@gmail.com) |
+| Denise Fetzer | [Denise.fetzer1@gmail.com](mailto:Denise.fetzer1@gmail.com) |
+| Akansha Sharma | [akanshasharmagermany@gmail.com](mailto:akanshasharmagermany@gmail.com) |
+| Bhuvana Chandra Thota | [Thotab15@gmail.com](mailto:Thotab15@gmail.com) |
+| Aryan Thakkar | [aryanthakkar221@gmail.com](mailto:aryanthakkar221@gmail.com) |
