@@ -2,6 +2,7 @@ fastapi
 uvicorn[standard]
 python-multipart
 faster-whisper
+av<19                   # PyAV 19 breaks faster-whisper 1.2.1 (metadata_errors argument removed)
 piper-tts
 langdetect
 # Person B (brain)
