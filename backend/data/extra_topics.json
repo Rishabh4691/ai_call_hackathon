@@ -1,0 +1,26 @@
+[
+  {
+    "id": "HX01",
+    "label_de": "Wohnen und Wohnungslosigkeit",
+    "label_en": "Housing and homelessness",
+    "scope": "Housing search, risk of losing a home, eviction notices, rent arrears, homelessness, sleeping rough.",
+    "phrasing_en": "My landlord ended my lease and I have nowhere to go.",
+    "phrasing_de": "Mir wurde die Wohnung gekündigt und ich weiß nicht, wohin.",
+    "clarification": "Town/postcode; whether a notice or eviction letter was received; rent arrears; household size; whether the person has a place to sleep tonight.",
+    "handling_note": "Internal topic (not in the Caritas catalogue). Do not promise housing or benefits. If the person has nowhere to sleep tonight and is in danger, give the emergency number as well as the local service.",
+    "keywords_de": "Wohnung; Wohnungssuche; Kündigung; Räumung; Mietschulden; obdachlos; wohnungslos; Obdachlosigkeit; kein Dach über dem Kopf; Miete nicht zahlen; Vermieter; Mietvertrag; Wohnungsverlust",
+    "keywords_en": "apartment; flat; housing; evicted; eviction; landlord; lease; rent arrears; homeless; nowhere to live; nowhere to sleep; losing my home"
+  },
+  {
+    "id": "HX02",
+    "label_de": "Gewalt und Missbrauch",
+    "label_en": "Violence and abuse",
+    "scope": "Domestic violence, violence in a relationship, sexual abuse, assault and being a victim of crime; also relatives and friends who are worried.",
+    "phrasing_en": "My partner is violent and I am afraid.",
+    "phrasing_de": "Mein Partner wird gewalttätig und ich habe Angst.",
+    "clarification": "Whether anyone is in immediate danger (if so give 110/112 first); adult or child affected; whether the person can talk safely right now; town/postcode.",
+    "handling_note": "Internal topic (not in the Caritas catalogue). Ask about immediate danger first. Do not ask for details of the abuse, do not advise confronting the person, and offer a hotline that works anonymously.",
+    "keywords_de": "häusliche Gewalt; Gewalt in der Beziehung; Mann schlägt mich; Ehemann; Freund; Partner; geschlagen; bedroht; Missbrauch; Übergriff; Frauenhaus; Opfer; Angst zu Hause; sexuelle Gewalt; Stalking",
+    "keywords_en": "domestic violence; husband hits me; boyfriend; partner; beaten; threatened; abuse; assault; victim; shelter; afraid at home; sexual violence; stalking"
+  }
+]

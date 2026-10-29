@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+python-multipart
+faster-whisper
+piper-tts
+langdetect
+# Person B (brain)
+openpyxl
+numpy
+scikit-learn            # TF-IDF fallback embedder
+sentence-transformers   # multilingual-e5-small (real embedder; downloads the model on first run)

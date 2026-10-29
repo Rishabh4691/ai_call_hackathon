@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+backend/models/*
+!backend/models/.gitkeep
+backend/tmp/*
+!backend/tmp/audio/.gitkeep
+.DS_Store
+
+backend/data/navigator.db
+backend/data/.cache/

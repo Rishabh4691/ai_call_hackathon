@@ -1,0 +1,30 @@
+[
+  {
+    "id": "svc_001",
+    "name": "Pflegeberatung für Angehörige (Platzhalter)",
+    "description": "Beratung für Menschen, die Familienmitglieder zu Hause pflegen.",
+    "topics": ["Pflege", "Angehörige", "Beratung"],
+    "target_group": ["pflegende Angehörige"],
+    "city": "Würzburg",
+    "address": "Musterstraße 1, 97070 Würzburg",
+    "phone": "+49 931 000000",
+    "email": "info@example.org",
+    "website": "https://example.org",
+    "opening_hours": "Mo–Fr 9–12 Uhr",
+    "languages": ["de", "en"]
+  },
+  {
+    "id": "svc_002",
+    "name": "Schuldnerberatung (Platzhalter)",
+    "description": "Hilfe bei Schulden, Mahnungen und Geldsorgen.",
+    "topics": ["Schulden", "Geld", "Beratung"],
+    "target_group": ["Erwachsene", "Familien"],
+    "city": "Schweinfurt",
+    "address": "Beispielweg 2, 97421 Schweinfurt",
+    "phone": "+49 9721 000000",
+    "email": "kontakt@example.org",
+    "website": "https://example.org",
+    "opening_hours": "Di und Do 9–15 Uhr",
+    "languages": ["de"]
+  }
+]
