@@ -1,64 +1,279 @@
-/* Skeleton styles. Owner: B (Gemini). Replace with the real theme from A's design (SPEC.md §8).
-   No web fonts or CDN: system fonts only. */
+/* Caritas Wegweiser: a calm, formal reception desk.
+   One accent (a deep red) used only where it matters: the talk button and the recommended service.
+   System fonts only (no web fonts or CDN). Serif for the assistant's voice, sans-serif for everything else. */
 
 :root {
   color-scheme: light dark;
-  --scale: 1; /* A− / A+ will change this between 1 and 2 */
-  --bg: #ffffff;
-  --fg: #1b1f24;
-  --muted: #59636e;
-  --line: #d0d7de;
-  --accent: #0b57d0;
-  --card: #f3f6fb;
+  --scale: 1;
+  --page: #edf0f3;     /* mist */
+  --panel: #ffffff;    /* paper */
+  --ink: #1c2430;      /* slate ink */
+  --muted: #5a6575;
+  --rule: #d4dae2;
+  --note: #e3e8ee;     /* the person's own words */
+  --accent: #a6192e;   /* deep red */
+  --accent-ink: #ffffff;
+  --accent-soft: #f6e4e7;
+  --danger-bg: #fbe9e9;
+  --danger-ink: #7a1620;
+  --serif: Charter, "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #111418;
-    --fg: #e8eaed;
-    --muted: #a6adb4;
-    --line: #3a4046;
-    --accent: #8ab4f8;
-    --card: #1c2128;
+    --page: #12161b;
+    --panel: #1a1f26;
+    --ink: #e8ecf1;
+    --muted: #9aa5b4;
+    --rule: #2c333d;
+    --note: #252c35;
+    --accent: #e25a6e;
+    --accent-ink: #1a0a0d;
+    --accent-soft: #3a1f25;
+    --danger-bg: #3a1c1f;
+    --danger-ink: #ffc9cf;
   }
 }
 
+* { box-sizing: border-box; }
 html { font-size: calc(112.5% * var(--scale)); } /* 18 px base */
 body {
   margin: 0;
-  background: var(--bg);
-  color: var(--fg);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  line-height: 1.5;
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--sans);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
 }
-#app { max-width: 40rem; margin: 0 auto; padding: 1rem; }
 [hidden] { display: none !important; }
-button, input { font: inherit; min-height: 48px; }
-:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 
-.top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
-.notice { border-left: 4px solid var(--accent); background: var(--card); padding: 0.5rem 0.75rem; }
-.backend-down { background: #fde8e7; color: #7a1d16; padding: 0.5rem 0.75rem; }
-
-.conversation { list-style: none; padding: 0; display: grid; gap: 0.75rem; }
-.conversation .who { font-size: 0.8rem; color: var(--muted); }
-.conversation p { margin: 0.25rem 0; }
-.user { justify-self: end; background: var(--card); padding: 0.5rem 0.75rem; border-radius: 12px; }
-.service section { border: 2px solid var(--line); border-radius: 12px; padding: 0.75rem 1rem; }
-.service.latest section { border-color: var(--accent); }
-.service h2 { margin: 0.25rem 0; font-size: 1.2rem; }
-.service h3 { margin: 0.5rem 0 0; font-size: 1rem; }
-.service dl { display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem 0.75rem; }
-.service dd { margin: 0; overflow-wrap: anywhere; }
-.kicker { color: var(--muted); font-size: 0.85rem; margin: 0; }
-
-.controls { display: grid; gap: 0.75rem; justify-items: center; }
-.talk {
-  width: 7rem; height: 7rem; border-radius: 50%;
-  border: 3px solid var(--accent); background: var(--bg); color: var(--fg);
-  touch-action: none; user-select: none; -webkit-user-select: none;
+#app {
+  max-width: 42rem;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--panel);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 0 1px var(--rule);
 }
-.talk[data-state="listening"] { background: var(--accent); color: var(--bg); }
-.text-form { display: flex; gap: 0.5rem; width: 100%; flex-wrap: wrap; }
-.text-form label { width: 100%; }
-.text-form input { flex: 1; min-width: 0; padding: 0 0.75rem; }
+
+/* ---------- masthead ---------- */
+.masthead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem 1rem;
+  border-bottom: 1px solid var(--rule);
+}
+.brand { display: flex; align-items: center; gap: 0.85rem; }
+.mark {
+  flex: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--accent);
+  display: grid;
+  place-items: center;
+}
+.mark svg { width: 1.55rem; height: 1.55rem; fill: var(--accent-ink); }
+.masthead h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.55rem;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: 0.005em;
+}
+.tagline { margin: 0.1rem 0 0; color: var(--muted); font-size: 0.85rem; }
+
+.lang { display: flex; border: 1px solid var(--rule); border-radius: 999px; padding: 3px; }
+.lang button {
+  min-height: 40px;
+  min-width: 48px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.lang button[aria-pressed="true"] { background: var(--ink); color: var(--panel); }
+
+/* ---------- emergency strip ---------- */
+.emergency {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem 1.5rem;
+  align-items: start;
+  padding: 0.9rem 1.5rem;
+  background: var(--page);
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.85rem;
+}
+.notice { margin: 0; color: var(--muted); max-width: 26rem; }
+.hotlines h2 { margin: 0 0 0.15rem; font-size: 0.85rem; font-weight: 700; color: var(--ink); }
+.hotlines p { margin: 0; color: var(--muted); }
+.hotlines a { color: var(--ink); font-weight: 700; white-space: nowrap; }
+.backend-down { margin: 1rem 1.5rem 0; padding: 0.75rem 1rem; border-radius: 8px; background: var(--danger-bg); color: var(--danger-ink); }
+
+/* ---------- conversation transcript ---------- */
+.conversation {
+  list-style: none;
+  margin: 0;
+  padding: 1.5rem 1.5rem 1rem;
+  display: grid;
+  gap: 1.25rem;
+  flex: 1;
+  align-content: start;
+}
+.conversation > li { scroll-margin-bottom: var(--dock-h, 14rem); }
+.conversation .who { display: block; font-size: 0.78rem; font-weight: 600; color: var(--muted); margin-bottom: 0.2rem; }
+.conversation p { margin: 0; }
+
+/* the assistant speaks like a letter: serif, generous, left-aligned under a thin red rule */
+.assistant { max-width: 34rem; padding-left: 1rem; border-left: 2px solid var(--accent); }
+.assistant p { font-family: var(--serif); font-size: 1.12rem; line-height: 1.6; }
+
+/* the person's own words: short notes on the right */
+.user { justify-self: end; max-width: 30rem; text-align: right; }
+.user p { display: inline-block; text-align: left; background: var(--note); padding: 0.55rem 0.9rem; border-radius: 14px 14px 4px 14px; }
+
+.quiet {
+  min-height: 44px;
+  padding: 0 0.6rem;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.quiet:hover { color: var(--ink); }
+.replay { margin-top: 0.15rem; padding-left: 0; }
+
+/* the recommended service: a formal card, the one place besides the button that carries the red */
+.service section {
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-top: 4px solid var(--rule);
+  border-radius: 6px;
+  padding: 1rem 1.25rem 1.1rem;
+}
+.service.latest section { border-top-color: var(--accent); box-shadow: 0 6px 24px -14px rgba(28, 36, 48, 0.45); }
+.kicker { color: var(--accent); font-size: 0.8rem; font-weight: 700; margin: 0; }
+.service h2 { margin: 0.2rem 0 0.6rem; font-family: var(--serif); font-size: 1.3rem; line-height: 1.3; font-weight: 600; }
+.why { background: var(--accent-soft); border-radius: 6px; padding: 0.6rem 0.85rem; margin-bottom: 0.75rem; }
+.why h3 { margin: 0 0 0.1rem; font-size: 0.8rem; font-weight: 700; }
+.why p { font-size: 0.95rem; }
+.service dl { display: grid; grid-template-columns: max-content 1fr; gap: 0.35rem 1rem; margin: 0; font-size: 0.95rem; }
+.service dt { color: var(--muted); }
+.service dd { margin: 0; overflow-wrap: anywhere; }
+
+/* ---------- dock with the talk button ---------- */
+.dock {
+  position: sticky;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  gap: 0.35rem;
+  padding: 0.85rem 1.5rem 0.6rem;
+  background: var(--panel);
+  border-top: 1px solid var(--rule);
+}
+.welcome { margin: 0 0 0.25rem; text-align: center; font-family: var(--serif); font-size: 1.05rem; max-width: 30rem; }
+
+.talk-wrap { --level: 0; position: relative; width: 6.75rem; height: 6.75rem; display: grid; place-items: center; }
+.ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  opacity: 0;
+  transform: scale(1);
+  transition: transform 120ms linear, opacity 200ms ease;
+  pointer-events: none;
+}
+.talk-wrap[data-state="listening"] .ring-inner { opacity: 0.55; transform: scale(calc(1.02 + var(--level) * 0.18)); }
+.talk-wrap[data-state="listening"] .ring-outer { opacity: 0.25; transform: scale(calc(1.06 + var(--level) * 0.38)); }
+
+.talk {
+  position: relative;
+  width: 6rem;
+  height: 6rem; /* 108 px: above the 96 px minimum */
+  border-radius: 50%;
+  border: 0;
+  background: var(--accent);
+  color: var(--accent-ink);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  box-shadow: 0 10px 24px -12px var(--accent);
+  transition: transform 120ms ease, background-color 200ms ease;
+}
+.talk:active { transform: scale(0.97); }
+.talk .icon svg { width: 2.5rem; height: 2.5rem; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.talk[data-state="thinking"] { background: var(--muted); cursor: progress; }
+.talk[data-state="thinking"] .icon svg { fill: currentColor; stroke: none; }
+.talk[data-state="speaking"] { background: var(--ink); color: var(--panel); }
+.talk:disabled { opacity: 0.85; }
+
+.status { margin: 0; text-align: center; }
+.status-label { display: block; font-weight: 700; }
+.status-hint { display: block; color: var(--muted); font-size: 0.85rem; }
+.status-hint:empty { display: none; }
+.error { margin: 0; padding: 0.5rem 0.9rem; border-radius: 8px; background: var(--danger-bg); color: var(--danger-ink); text-align: center; }
+.error .quiet { color: var(--danger-ink); }
+
+.dock-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 1rem; }
+
+.text-form { width: 100%; max-width: 32rem; margin-top: 0.25rem; }
+.text-form label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.3rem; }
+.text-row { display: flex; gap: 0.5rem; }
+.text-row input {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  padding: 0 0.9rem;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--page);
+}
+.text-row button {
+  flex: none;
+  min-height: 48px;
+  padding: 0 1.1rem;
+  border: 0;
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--panel);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ---------- small screens ---------- */
+@media (max-width: 34rem) {
+  .masthead, .emergency, .conversation, .dock { padding-left: 1rem; padding-right: 1rem; }
+  .emergency { grid-template-columns: 1fr; }
+  .masthead h1 { font-size: 1.3rem; }
+  .tagline { display: none; }
+  .service dl { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .service dt { font-size: 0.8rem; margin-top: 0.5rem; }
+  .talk-wrap { width: 6rem; height: 6rem; }
+  .talk { width: 5.5rem; height: 5.5rem; } /* 99 px, still above the 96 px minimum */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring, .talk { transition: none; }
+}

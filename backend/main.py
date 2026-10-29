@@ -146,7 +146,8 @@ register_error_handlers(app)
 def _cleanup_old_audio() -> None:
     now = time.time()
     for path in AUDIO_DIR.glob("*.wav"):
-        if path.name != mock.MOCK_AUDIO_NAME and now - path.stat().st_mtime > AUDIO_MAX_AGE_SECONDS:
+        keep = path.name == mock.MOCK_AUDIO_NAME or path.name.startswith("greeting_")
+        if not keep and now - path.stat().st_mtime > AUDIO_MAX_AGE_SECONDS:
             path.unlink(missing_ok=True)
 
 
@@ -175,6 +176,75 @@ def _call_navigate(session_id: str, history: list[dict], user_text: str, languag
 
 
 # ---------------- Endpoints ----------------
+# ---------------- Greeting: the assistant introduces itself when a conversation starts ----------------
+GREETING = {
+    "de": "Guten Tag, ich bin der digitale Wegweiser der Caritas in Unterfranken. "
+          "Ich helfe Ihnen, die passende Beratungsstelle zu finden. Wie kann ich Ihnen helfen?",
+    "en": "Good day, I am the digital guide of Caritas in Lower Franconia. "
+          "I help you find the right place for support. How can I help you?",
+    "auto_en": "You can also speak English with me.",
+}
+
+
+def _join_wavs(parts, out_path: Path) -> bool:
+    """Join wav files with the same format into one file. False if the formats differ."""
+    import wave
+
+    params, frames = None, []
+    for part in parts:
+        with wave.open(str(part), "rb") as w:
+            p = (w.getnchannels(), w.getsampwidth(), w.getframerate())
+            if params and p != params:
+                return False
+            params = p
+            frames.append(w.readframes(w.getnframes()))
+    with wave.open(str(out_path), "wb") as w:
+        w.setnchannels(params[0])
+        w.setsampwidth(params[1])
+        w.setframerate(params[2])
+        for f in frames:
+            w.writeframes(f)
+    return True
+
+
+def _make_greeting(language: str) -> tuple[str, str]:
+    """Text and audio file name of the greeting; the audio is made once and reused."""
+    from voice import tts
+
+    if language in ("de", "en"):
+        text = GREETING[language]
+        out = AUDIO_DIR / f"greeting_{language}.wav"
+        if not out.exists():
+            Path(tts.synthesize(text, language)).replace(out)
+        return text, out.name
+    # auto: German greeting in the German voice, then one English sentence in the English voice
+    text = f"{GREETING['de']} {GREETING['auto_en']}"
+    out = AUDIO_DIR / "greeting_auto.wav"
+    if not out.exists():
+        de_part = Path(tts.synthesize(GREETING["de"], "de"))
+        en_part = Path(tts.synthesize(GREETING["auto_en"], "en"))
+        if not _join_wavs([de_part, en_part], out):
+            de_part.replace(out)
+        for part in (de_part, en_part):
+            part.unlink(missing_ok=True)
+    return text, out.name
+
+
+@app.get("/greeting")
+async def greeting(language: str = "auto"):
+    language = (language or "auto").lower()
+    if language not in ("auto", "de", "en"):
+        raise APIError("bad_request", "language must be auto, de or en.")
+    if MOCK:
+        text = GREETING["en"] if language == "en" else GREETING["de"]
+        return {"text": text, "language": language, "audio_url": f"/audio/{mock.MOCK_AUDIO_NAME}"}
+    if not state["ready"]:
+        raise APIError("server_busy", "Models are still loading.")
+    async with inference_lock:
+        text, name = await run_in_threadpool(_make_greeting, language)
+    return {"text": text, "language": language, "audio_url": f"/audio/{name}"}
+
+
 @app.get("/health")
 async def health():
     return {"ok": state["ready"], "mock": MOCK, "models": state["models"], "error": state["error"]}

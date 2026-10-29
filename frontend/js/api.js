@@ -70,6 +70,18 @@ export async function health() {
 }
 
 /**
+ * The assistant's spoken introduction (GET /greeting). The audio is made once on the server and reused.
+ * @param {'auto'|'de'|'en'} [language]
+ * @returns {Promise<{text: string, url: string|null}>}
+ * @throws {ApiError}
+ */
+export async function greeting(language = 'auto') {
+  const body = await request(`/greeting?language=${encodeURIComponent(language)}`, { method: 'GET' }, 20_000);
+  if (!body || typeof body.text !== 'string') throw new ApiError('internal', 'Empty greeting');
+  return { text: body.text, url: audioUrl(body.audio_url) };
+}
+
+/**
  * Turn the backend's relative reply_audio_url into a full URL.
  * @param {string|null|undefined} path
  * @returns {string|null}

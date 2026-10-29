@@ -23,6 +23,10 @@ const RESENDABLE = new Set(['network', 'timeout', 'server_busy', 'internal']);
 // One press starts the call. Each turn: the mic opens, the room noise is measured, speech is detected, and the
 // turn is sent after CALL_SILENCE_MS of silence. When the reply has been spoken, the mic opens again by itself.
 // The mic is closed while the assistant speaks, so it never hears itself. Esc / Stop ends the call.
+const FALLBACK_GREETING = {
+  de: 'Guten Tag, ich bin der digitale Wegweiser der Caritas in Unterfranken. Ich helfe Ihnen, die passende Beratungsstelle zu finden. Wie kann ich Ihnen helfen?',
+  en: 'Good day, I am the digital guide of Caritas in Lower Franconia. I help you find the right place for support. How can I help you?',
+};
 const pageParams = new URLSearchParams(globalThis.location ? globalThis.location.search : '');
 const CALL = pageParams.get('call') === '1';
 const CALL_SILENCE_MS = Number(pageParams.get('silence')) || 1200; // pause that ends a turn
@@ -30,6 +34,8 @@ const CALL_NO_SPEECH_MS = 12_000;   // nobody speaks for this long -> the call e
 const CALL_MIN_SPEECH_MS = 300;     // speech shorter than this counts as noise
 const CALL_RELISTEN_MS = 300;
 let callActive = false;
+let greetingTurn = null;            // { text, url } of the assistant's introduction
+let greeted = false;                // the introduction has been spoken in this conversation
 let vad = null;                     // per-turn voice detection state
 let callMisses = 0;                 // turns in a row without recognised speech
 
@@ -152,7 +158,24 @@ function callTick(seconds, level) {
 function startCall() {
   callActive = true;
   callMisses = 0;
+  if (!greeted && greetingTurn) {
+    greeted = true;
+    speak(greetingTurn.url, greetingTurn.text);
+    return;
+  }
   startListening('call');
+}
+
+/** Fetch the introduction and show it as the assistant's first message. */
+async function showGreeting() {
+  const pref = ui.languagePref();
+  try {
+    greetingTurn = await api.greeting(pref);
+  } catch {
+    const lang = pref === 'en' ? 'en' : 'de';
+    greetingTurn = { text: FALLBACK_GREETING[lang], url: null }; // the browser voice reads it
+  }
+  ui.addAssistant(greetingTurn.text, greetingTurn.url);
 }
 
 function endCall() {
@@ -265,7 +288,9 @@ function startOver() {
   replyLang = null;
   sessionId = newSessionId();
   ui.clear();
+  greeted = false;
   setState('idle');
+  showGreeting();
 }
 
 // ---------- handlers from js/ui.js ----------
@@ -356,4 +381,7 @@ ui.init({
   },
 });
 setState('idle');
-api.health().then(ui.setBackendOk);
+api.health().then((ok) => {
+  ui.setBackendOk(ok);
+  showGreeting();
+});
