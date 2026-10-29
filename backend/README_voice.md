@@ -40,6 +40,16 @@ Then open http://localhost:8001/health (shows `"ok": false` while loading) and h
 | `WHISPER_DEVICE` / `WHISPER_COMPUTE` | `cpu` / `int8` | `cuda` / `float16` on a GPU |
 | `PIPER_VOICE_DE` / `PIPER_VOICE_EN` | `models/de_DE-thorsten-medium.onnx` / `models/en_US-lessac-medium.onnx` | Voice files |
 | `CORS_ORIGINS` | `*` | Comma-separated allowed frontend origins |
+| `TTS_LENGTH_SCALE` | `1.25` | Speaking speed: 1.0 = Piper default, higher = slower |
+| `TTS_SENTENCE_PAUSE` | `0.5` | Seconds of silence after each sentence |
+| `TTS_GERMAN_NAMES` | `1` | In English replies, speak German names (streets, towns, services) with German pronunciation, in the same English voice. `0` = off |
+
+## How replies are spoken
+
+- Phone numbers and postcodes are read digit by digit, in the reply's language.
+- Ranges and times: "4–6" → "4 to 6" / "4 bis 6", "Mo–Fr" → "Monday to Friday" / "Montag bis Freitag", "10:00" → "10 Uhr".
+- English replies keep one voice: German names are turned into German phonemes (`[[...]]` blocks) that the English voice speaks.
+  The name detection is a heuristic in `voice/tts.py` (`_GERMAN_TOWNS`, `_GERMAN_SUFFIXES`); add names there if one is missed.
 
 ## Test with curl (macOS can generate test speech with `say`)
 
