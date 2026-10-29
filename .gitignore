@@ -4,7 +4,7 @@ __pycache__/
 .env
 backend/models/*
 !backend/models/.gitkeep
-backend/tmp/*
+backend/tmp/audio/*
 !backend/tmp/audio/.gitkeep
 .DS_Store
 

@@ -1,10 +1,13 @@
-# Voice and API layer (Person A)
+# Backend
 
 FastAPI server: receives audio or text, transcribes it with faster-whisper, calls
-`brain.navigator.navigate()` (Person B), speaks the reply with Piper and returns one JSON response.
-Spec: `docs/Backend_Person_A_Voice_API.pdf`.
+`brain.navigator.navigate()`, speaks the reply with Piper and returns one JSON response.
+Spec: [`docs/Backend_Person_A_Voice_API.pdf`](../docs/Backend_Person_A_Voice_API.pdf).
+For an overview of the whole project, see the [root README](../README.md).
 
-## Install (from `backend/`)
+All commands below run from `backend/`.
+
+## Install
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
@@ -22,7 +25,7 @@ python -m piper.download_voices --download-dir models de_DE-thorsten-medium en_U
 Voice licences differ: check each voice's model card (rhasspy/piper-voices on Hugging Face) before public use.
 The Whisper model (`small`, ~500 MB) downloads automatically on the first real start and is cached.
 
-## Run (from `backend/`)
+## Run
 
 ```bash
 MOCK=1 uvicorn main:app --host 0.0.0.0 --port 8000 --reload   # canned answers, no models
@@ -42,6 +45,8 @@ Then open http://localhost:8001/health (shows `"ok": false` while loading) and h
 | `CORS_ORIGINS` | `*` | Comma-separated allowed frontend origins |
 | `TTS_LENGTH_SCALE` | `1.25` | Speaking speed: 1.0 = Piper default, higher = slower |
 | `TTS_SENTENCE_PAUSE` | `0.5` | Seconds of silence after each sentence |
+| `EMBEDDER` | `auto` | Retrieval embedder: `e5` (multilingual-e5-small), `tfidf` (lexical fallback) or `auto` |
+| `E5_MODEL` | `intfloat/multilingual-e5-small` | Sentence-transformers model used when `EMBEDDER` is `e5` |
 | `TTS_GERMAN_NAMES` | `1` | In English replies, speak German names (streets, towns, services) with German pronunciation, in the same English voice. `0` = off |
 
 ## How replies are spoken
@@ -71,6 +76,26 @@ curl -o reply.wav localhost:8001/audio/<id>.wav && afplay reply.wav
 Errors: `{"error": "<code>", "message": "..."}` with `empty_audio` 400, `no_speech` 422,
 `bad_request` 400, `server_busy` 503, `internal` 500.
 
+## Brain: service data and retrieval
+
+The brain reads the Caritas workbook `data/Data_caritas_expanded.xlsx` (sheets `Regional_Services`,
+`Online_Topics`, `Availability`), adds the topics in `data/extra_topics.json`, and builds a SQLite
+database `data/navigator.db` (git-ignored, rebuilt automatically when missing).
+The workbook is **not in the repo**, so add it first.
+
+```bash
+python -m brain.ingest                                   # rebuild data/navigator.db
+python -m brain.cli "Ich habe Mahnungen und weiß nicht weiter"
+EMBEDDER=e5 python -m brain.cli "I need debt advice in Kitzingen" --k 5
+python -m tests.eval_retrieval                           # German + English retrieval eval
+```
+
+A test case in `tests/cases.json` passes if a service of the expected category is in the top 3.
+Add new real-world phrasings there: that file is the regression suite.
+
+`brain/navigator.py` is still a stub that returns a fixed answer. The next step is to connect it to
+`brain.retrieve.Retriever`, so that `/talk` returns real services.
+
 ## Files
 
 | File | Purpose |
@@ -82,5 +107,18 @@ Errors: `{"error": "<code>", "message": "..."}` with `empty_audio` 400, `no_spee
 | `sessions.py` | In-memory session history (60 min expiry, last 10 turns) |
 | `errors.py` | Error codes and JSON error handlers |
 | `mock.py` | Canned responses for `MOCK=1` |
+| `contracts.py` | Shared types and function signatures between the voice layer and the brain |
+| `brain/navigator.py` | `navigate()`: conversation logic called by `/talk` (currently a stub) |
+| `brain/ingest.py` | Builds `data/navigator.db` from the Excel workbook |
+| `brain/retrieve.py` | Hybrid retrieval (embeddings + topics, combined with RRF) with a region boost |
+| `brain/embed.py` | E5 embedder with a TF-IDF fallback |
+| `brain/geo.py` | Detects the user's region/town |
+| `brain/safety.py` | Crisis detection |
+| `brain/config.py` | Paths, regions and retrieval tuning |
+| `brain/cli.py` | Try retrieval from the command line |
+| `data/services.schema.md` | Field reference for service records |
+| `data/services.sample.json` | Placeholder service records |
+| `data/extra_topics.json` | Extra topics that are not in the Caritas catalogue |
+| `tests/eval_retrieval.py`, `tests/cases.json` | Retrieval evaluation |
 
 Measured on a MacBook Air (CPU): about 2 s per turn for speech-to-text plus speech output, excluding the LLM.

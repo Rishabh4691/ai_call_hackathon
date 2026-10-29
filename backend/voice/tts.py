@@ -34,7 +34,7 @@ def load() -> None:
 
     for language, path in VOICE_FILES.items():
         if not os.path.exists(path):
-            raise RuntimeError(f"Piper voice not found: {path}. See backend/README_voice.md, 'Download the voices'.")
+            raise RuntimeError(f"Piper voice not found: {path}. See backend/README.md, 'Download the voices'.")
         _voices[language] = PiperVoice.load(path)
 
 
