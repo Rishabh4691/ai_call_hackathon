@@ -1,0 +1,458 @@
+{
+ "wurzburg": {
+  "name": "Würzburg",
+  "lat": 49.7933723,
+  "lon": 9.9309779,
+  "county": "Würzburg"
+ },
+ "burgstadt": {
+  "name": "Bürgstadt",
+  "lat": 49.7158643,
+  "lon": 9.2713816,
+  "county": "Landkreis Miltenberg"
+ },
+ "hassfurt": {
+  "name": "Haßfurt",
+  "lat": 50.042783,
+  "lon": 10.5086158,
+  "county": "Landkreis Haßberge"
+ },
+ "aschaffenburg": {
+  "name": "Aschaffenburg",
+  "lat": 49.9738133,
+  "lon": 9.1446665,
+  "county": "Aschaffenburg"
+ },
+ "bad kissingen": {
+  "name": "Bad Kissingen",
+  "lat": 50.1974948,
+  "lon": 10.0573261,
+  "county": "Landkreis Bad Kissingen"
+ },
+ "bad neustadt an der saale": {
+  "name": "Bad Neustadt an der Saale",
+  "lat": 50.322637,
+  "lon": 10.2164873,
+  "county": "Landkreis Rhön-Grabfeld"
+ },
+ "kitzingen": {
+  "name": "Kitzingen",
+  "lat": 49.7380667,
+  "lon": 10.1601218,
+  "county": "Landkreis Kitzingen"
+ },
+ "schweinfurt": {
+  "name": "Schweinfurt",
+  "lat": 50.0451485,
+  "lon": 10.2340647,
+  "county": ""
+ },
+ "karlstadt": {
+  "name": "Karlstadt",
+  "lat": 49.9698176,
+  "lon": 9.7441397,
+  "county": "Landkreis Main-Spessart"
+ },
+ "lohr am main": {
+  "name": "Lohr am Main",
+  "lat": 49.9960531,
+  "lon": 9.5566886,
+  "county": "Landkreis Main-Spessart"
+ },
+ "miltenberg": {
+  "name": "Miltenberg",
+  "lat": 49.7017584,
+  "lon": 9.2559718,
+  "county": "Landkreis Miltenberg"
+ },
+ "bastheim": {
+  "name": "Bastheim",
+  "lat": 50.3949465,
+  "lon": 10.1825551,
+  "county": "Landkreis Rhön-Grabfeld"
+ },
+ "elfershausen": {
+  "name": "Elfershausen",
+  "lat": 50.1454862,
+  "lon": 9.9641725,
+  "county": "Landkreis Bad Kissingen"
+ },
+ "hochberg": {
+  "name": "Höchberg",
+  "lat": 49.7818258,
+  "lon": 9.8786841,
+  "county": "Landkreis Würzburg"
+ },
+ "stadtprozelten": {
+  "name": "Stadtprozelten",
+  "lat": 49.7809332,
+  "lon": 9.4053282,
+  "county": "Landkreis Miltenberg"
+ },
+ "steinfeld": {
+  "name": "Steinfeld",
+  "lat": 49.9524401,
+  "lon": 9.6721319,
+  "county": "Landkreis Main-Spessart"
+ },
+ "karlstein": {
+  "name": "Karlstein",
+  "lat": 50.0443203,
+  "lon": 9.0337844,
+  "county": "Landkreis Aschaffenburg"
+ },
+ "hafenlohr": {
+  "name": "Hafenlohr",
+  "lat": 49.8679918,
+  "lon": 9.598114,
+  "county": "Landkreis Main-Spessart"
+ },
+ "schollkrippen": {
+  "name": "Schöllkrippen",
+  "lat": 50.0845481,
+  "lon": 9.2462316,
+  "county": "Landkreis Aschaffenburg"
+ },
+ "werneck": {
+  "name": "Werneck",
+  "lat": 49.9862294,
+  "lon": 10.0955939,
+  "county": "Landkreis Schweinfurt"
+ },
+ "marktheidenfeld": {
+  "name": "Marktheidenfeld",
+  "lat": 49.858203,
+  "lon": 9.5667035,
+  "county": "Landkreis Main-Spessart"
+ },
+ "kurnach": {
+  "name": "Kürnach",
+  "lat": 49.8393941,
+  "lon": 10.0525698,
+  "county": "Landkreis Würzburg"
+ },
+ "grafenrheinfeld": {
+  "name": "Grafenrheinfeld",
+  "lat": 49.9906668,
+  "lon": 10.2098923,
+  "county": "Landkreis Schweinfurt"
+ },
+ "hofheim": {
+  "name": "Hofheim",
+  "lat": 50.09494,
+  "lon": 8.42285,
+  "county": "Main-Taunus-Kreis"
+ },
+ "grossostheim": {
+  "name": "Großostheim",
+  "lat": 49.913254,
+  "lon": 9.0684725,
+  "county": "Landkreis Aschaffenburg"
+ },
+ "veitshochheim": {
+  "name": "Veitshöchheim",
+  "lat": 49.8408582,
+  "lon": 9.8889132,
+  "county": "Landkreis Würzburg"
+ },
+ "sulzbach am main": {
+  "name": "Sulzbach am Main",
+  "lat": 49.9102501,
+  "lon": 9.1529545,
+  "county": "Landkreis Miltenberg"
+ },
+ "kleinheubach": {
+  "name": "Kleinheubach",
+  "lat": 49.7213663,
+  "lon": 9.1936241,
+  "county": "Landkreis Miltenberg"
+ },
+ "erlenbach": {
+  "name": "Erlenbach",
+  "lat": 49.8100674,
+  "lon": 9.1615538,
+  "county": "Landkreis Miltenberg"
+ },
+ "gerolzhofen": {
+  "name": "Gerolzhofen",
+  "lat": 49.9023278,
+  "lon": 10.3450682,
+  "county": "Landkreis Schweinfurt"
+ },
+ "kleinostheim": {
+  "name": "Kleinostheim",
+  "lat": 50.0120191,
+  "lon": 9.0541898,
+  "county": "Landkreis Aschaffenburg"
+ },
+ "gemunden am main": {
+  "name": "Gemünden am Main",
+  "lat": 50.056483,
+  "lon": 9.68987,
+  "county": "Landkreis Main-Spessart"
+ },
+ "greussenheim": {
+  "name": "Greußenheim",
+  "lat": 49.8224352,
+  "lon": 9.7663575,
+  "county": "Landkreis Würzburg"
+ },
+ "riedenberg": {
+  "name": "Riedenberg",
+  "lat": 50.3216442,
+  "lon": 9.8839,
+  "county": "Landkreis Bad Kissingen"
+ },
+ "rimpar": {
+  "name": "Rimpar",
+  "lat": 49.8565075,
+  "lon": 9.9571081,
+  "county": "Landkreis Würzburg"
+ },
+ "hosbach": {
+  "name": "Hösbach",
+  "lat": 50.0113447,
+  "lon": 9.2153485,
+  "county": "Landkreis Aschaffenburg"
+ },
+ "arnstein": {
+  "name": "Arnstein",
+  "lat": 49.9942425,
+  "lon": 9.9456805,
+  "county": "Landkreis Main-Spessart"
+ },
+ "geldersheim": {
+  "name": "Geldersheim",
+  "lat": 50.0400908,
+  "lon": 10.1426014,
+  "county": "Landkreis Schweinfurt"
+ },
+ "bad konigshofen": {
+  "name": "Bad Königshofen",
+  "lat": 50.2993334,
+  "lon": 10.4674873,
+  "county": "Landkreis Rhön-Grabfeld"
+ },
+ "volkach": {
+  "name": "Volkach",
+  "lat": 49.8674329,
+  "lon": 10.2326041,
+  "county": "Landkreis Kitzingen"
+ },
+ "bad bruckenau": {
+  "name": "Bad Brückenau",
+  "lat": 50.3070374,
+  "lon": 9.7770386,
+  "county": "Landkreis Bad Kissingen"
+ },
+ "rottendorf": {
+  "name": "Rottendorf",
+  "lat": 49.7994118,
+  "lon": 10.0321068,
+  "county": "Landkreis Würzburg"
+ },
+ "mainaschaff": {
+  "name": "Mainaschaff",
+  "lat": 49.981916,
+  "lon": 9.0857089,
+  "county": "Landkreis Aschaffenburg"
+ },
+ "gochsheim": {
+  "name": "Gochsheim",
+  "lat": 50.0167185,
+  "lon": 10.2915402,
+  "county": "Landkreis Schweinfurt"
+ },
+ "reckendorf": {
+  "name": "Reckendorf",
+  "lat": 50.0196966,
+  "lon": 10.8280457,
+  "county": "Landkreis Bamberg"
+ },
+ "mespelbrunn": {
+  "name": "Mespelbrunn",
+  "lat": 49.9151352,
+  "lon": 9.2907651,
+  "county": "Landkreis Aschaffenburg"
+ },
+ "aub": {
+  "name": "Aub",
+  "lat": 49.5524989,
+  "lon": 10.0652861,
+  "county": "Landkreis Würzburg"
+ },
+ "oerlenbach": {
+  "name": "Oerlenbach",
+  "lat": 50.147315,
+  "lon": 10.1355714,
+  "county": "Landkreis Bad Kissingen"
+ },
+ "elsenfeld": {
+  "name": "Elsenfeld",
+  "lat": 49.8473123,
+  "lon": 9.1618537,
+  "county": "Landkreis Miltenberg"
+ },
+ "ochsenfurt": {
+  "name": "Ochsenfurt",
+  "lat": 49.6643552,
+  "lon": 10.0647551,
+  "county": "Landkreis Würzburg"
+ },
+ "kolitzheim": {
+  "name": "Kolitzheim",
+  "lat": 49.9301932,
+  "lon": 10.2428136,
+  "county": "Landkreis Schweinfurt"
+ },
+ "neustadt am main": {
+  "name": "Neustadt am Main",
+  "lat": 49.9366153,
+  "lon": 9.557779,
+  "county": "Landkreis Main-Spessart"
+ },
+ "heidenfeld": {
+  "name": "Heidenfeld",
+  "lat": 49.9678241,
+  "lon": 10.2066443,
+  "county": "Landkreis Schweinfurt"
+ },
+ "bad bocklet": {
+  "name": "Bad Bocklet",
+  "lat": 50.278873,
+  "lon": 10.0607771,
+  "county": "Landkreis Bad Kissingen"
+ },
+ "estenfeld": {
+  "name": "Estenfeld",
+  "lat": 49.8388678,
+  "lon": 10.0028614,
+  "county": "Landkreis Würzburg"
+ },
+ "amorbach": {
+  "name": "Amorbach",
+  "lat": 49.6446699,
+  "lon": 9.2197299,
+  "county": "Landkreis Miltenberg"
+ },
+ "mellrichstadt": {
+  "name": "Mellrichstadt",
+  "lat": 50.4460338,
+  "lon": 10.3292315,
+  "county": "Landkreis Rhön-Grabfeld"
+ },
+ "margetshochheim": {
+  "name": "Margetshöchheim",
+  "lat": 49.8376941,
+  "lon": 9.8509749,
+  "county": "Landkreis Würzburg"
+ },
+ "munnerstadt": {
+  "name": "Münnerstadt",
+  "lat": 50.2549715,
+  "lon": 10.2210984,
+  "county": "Landkreis Bad Kissingen"
+ },
+ "rottingen": {
+  "name": "Röttingen",
+  "lat": 49.5096843,
+  "lon": 9.9688193,
+  "county": "Landkreis Würzburg"
+ },
+ "bergtheim": {
+  "name": "Bergtheim",
+  "lat": 49.9086126,
+  "lon": 10.078673,
+  "county": "Landkreis Würzburg"
+ },
+ "giebelstadt": {
+  "name": "Giebelstadt",
+  "lat": 49.6447595,
+  "lon": 9.9344369,
+  "county": "Landkreis Würzburg"
+ },
+ "eltmann": {
+  "name": "Eltmann",
+  "lat": 49.9725016,
+  "lon": 10.6662064,
+  "county": "Landkreis Haßberge"
+ },
+ "eisingen": {
+  "name": "Eisingen",
+  "lat": 49.7612962,
+  "lon": 9.8292573,
+  "county": "Landkreis Würzburg"
+ },
+ "alzenau": {
+  "name": "Alzenau",
+  "lat": 50.085868,
+  "lon": 9.0813749,
+  "county": "Landkreis Aschaffenburg"
+ },
+ "bessenbach": {
+  "name": "Bessenbach",
+  "lat": 49.9670126,
+  "lon": 9.2510469,
+  "county": "Landkreis Aschaffenburg"
+ },
+ "ostheim vor der rhon": {
+  "name": "Ostheim vor der Rhön",
+  "lat": 50.4602714,
+  "lon": 10.2330495,
+  "county": "Landkreis Rhön-Grabfeld"
+ },
+ "schonungen": {
+  "name": "Schonungen",
+  "lat": 50.0503811,
+  "lon": 10.3044793,
+  "county": "Landkreis Schweinfurt"
+ },
+ "munsterschwarzach": {
+  "name": "Münsterschwarzach",
+  "lat": 49.8056695,
+  "lon": 10.2293317,
+  "county": "Landkreis Kitzingen"
+ },
+ "schwarzach am main": {
+  "name": "Schwarzach am Main",
+  "lat": 49.7998181,
+  "lon": 10.2304991,
+  "county": "Landkreis Kitzingen"
+ },
+ "hammelburg": {
+  "name": "Hammelburg",
+  "lat": 50.1064333,
+  "lon": 9.8581065,
+  "county": "Landkreis Bad Kissingen"
+ },
+ "kleinwallstadt": {
+  "name": "Kleinwallstadt",
+  "lat": 49.8691333,
+  "lon": 9.1803764,
+  "county": "Landkreis Miltenberg"
+ },
+ "guntersleben": {
+  "name": "Güntersleben",
+  "lat": 49.8697,
+  "lon": 9.905,
+  "county": "Landkreis Würzburg"
+ },
+ "kahl am main": {
+  "name": "Kahl am Main",
+  "lat": 50.0682273,
+  "lon": 9.007909,
+  "county": "Landkreis Aschaffenburg"
+ },
+ "randersacker": {
+  "name": "Randersacker",
+  "lat": 49.7497221,
+  "lon": 9.9977183,
+  "county": "Landkreis Würzburg"
+ },
+ "dammbach": {
+  "name": "Dammbach",
+  "lat": 49.8606678,
+  "lon": 9.3238694,
+  "county": "Landkreis Aschaffenburg"
+ }
+}

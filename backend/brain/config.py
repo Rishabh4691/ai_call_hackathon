@@ -4,6 +4,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
 XLSX_PATH = DATA_DIR / "Data_caritas_expanded.xlsx"
+# Official Caritas facility list (name + address only). Loaded in addition when the file is present.
+OFFICIAL_XLSX_PATH = DATA_DIR / "Caritas_Einrichtungen.xlsx"
+# Which services go into the database: "official" = only the official Caritas list (default),
+# "both" = also the researched services in Data_caritas_expanded.xlsx. Topics always come from the workbook.
+SERVICE_DATA = os.environ.get("SERVICE_DATA", "official")
 DB_PATH = DATA_DIR / "navigator.db"
 CACHE_DIR = DATA_DIR / ".cache"
 

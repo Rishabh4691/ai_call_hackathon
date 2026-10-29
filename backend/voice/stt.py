@@ -14,6 +14,14 @@ from voice import lang
 MODEL_NAME = os.getenv("WHISPER_MODEL", "small")        # fall back to "base" if too slow
 DEVICE = os.getenv("WHISPER_DEVICE", "cpu")             # "cuda" if a GPU is available
 COMPUTE_TYPE = os.getenv("WHISPER_COMPUTE", "int8")
+# Place and service names Whisper should expect (it otherwise hears "Main-Spessart" as "mein Spessort").
+# A list of names, not a sentence, so it does not push the language towards German or English.
+INITIAL_PROMPT = os.getenv(
+    "WHISPER_PROMPT",
+    "Caritas, Würzburg, Main-Spessart, Lohr am Main, Karlstadt, Marktheidenfeld, Kitzingen, Schweinfurt, Werneck, "
+    "Haßberge, Haßfurt, Bad Kissingen, Münnerstadt, Rhön-Grabfeld, Bad Neustadt an der Saale, Aschaffenburg, "
+    "Miltenberg, Unterfranken, Schuldnerberatung, Suchtberatung, Sozialstation, Pflegedienst.",
+)
 MIN_SECONDS = 0.3
 MAX_SECONDS = 30.0
 
@@ -39,7 +47,8 @@ def transcribe(audio_bytes: bytes, language_hint: str | None = None, suffix: str
         f.write(audio_bytes)
         path = f.name
     try:
-        segments, info = _model.transcribe(path, language=hint, vad_filter=True, beam_size=1)
+        segments, info = _model.transcribe(path, language=hint, vad_filter=True, beam_size=1,
+                                           initial_prompt=INITIAL_PROMPT or None)
         segments = list(segments)  # the generator does the actual work
     except Exception as e:
         logging.getLogger("navigator").exception("Transcription failed")

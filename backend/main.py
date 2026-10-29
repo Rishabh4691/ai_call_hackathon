@@ -86,11 +86,26 @@ def _load_models() -> None:
         except APIError as e:
             log.warning("Speech-to-text warm-up failed: %s", e)
     os.remove(warm_path)
+    # Load the brain's database and embedding model now, if it offers a warm-up.
+    try:
+        import brain.navigator as nav
+
+        if hasattr(nav, "warm_up"):
+            nav.warm_up()
+    except Exception:
+        log.exception("Brain warm-up failed (the first conversation may be slower)")
     state["models"] = {
         "stt": f"faster-whisper {stt.MODEL_NAME} ({stt.DEVICE}, {stt.COMPUTE_TYPE})",
         "tts": tts.voice_names(),
         "navigate": NAVIGATE_SOURCE,
     }
+    try:
+        import brain.navigator as nav
+
+        if getattr(nav, "USE_LLM", False):
+            state["models"]["llm"] = f"{nav.LLM_MODEL} @ {nav.LLM_BASE_URL}"
+    except Exception:
+        pass
     log.info("Models loaded and warmed up in %.1f s", time.perf_counter() - t0)
 
 

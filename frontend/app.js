@@ -19,6 +19,20 @@ import * as player from './js/player.js';
 const TAP_MS = 400;
 const RESENDABLE = new Set(['network', 'timeout', 'server_busy', 'internal']);
 
+// ---------- call mode (?call=1): a hands-free conversation like a phone call ----------
+// One press starts the call. Each turn: the mic opens, the room noise is measured, speech is detected, and the
+// turn is sent after CALL_SILENCE_MS of silence. When the reply has been spoken, the mic opens again by itself.
+// The mic is closed while the assistant speaks, so it never hears itself. Esc / Stop ends the call.
+const pageParams = new URLSearchParams(globalThis.location ? globalThis.location.search : '');
+const CALL = pageParams.get('call') === '1';
+const CALL_SILENCE_MS = Number(pageParams.get('silence')) || 1200; // pause that ends a turn
+const CALL_NO_SPEECH_MS = 12_000;   // nobody speaks for this long -> the call ends
+const CALL_MIN_SPEECH_MS = 300;     // speech shorter than this counts as noise
+const CALL_RELISTEN_MS = 300;
+let callActive = false;
+let vad = null;                     // per-turn voice detection state
+let callMisses = 0;                 // turns in a row without recognised speech
+
 /** @returns {string} a new session id (crypto.randomUUID needs localhost or HTTPS) */
 function newSessionId() {
   if (globalThis.crypto && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
@@ -60,10 +74,14 @@ async function startListening(mode) {
   const id = ++micId;
   mic = 'starting';
   pressMode = mode;
+  vad = null;
   try {
     await recorder.start({
       onProgress({ seconds, level }) {
-        if (id === micId && mic === 'recording') ui.setState('listening', { seconds, level });
+        if (id === micId && mic === 'recording') {
+          ui.setState('listening', { seconds, level });
+          if (pressMode === 'call') callTick(seconds, level);
+        }
       },
       onLimit() {
         if (id === micId) finishListening();
@@ -95,10 +113,68 @@ async function finishListening() {
   try {
     audio = await recorder.stop();
   } catch (err) {
-    if (myEpoch === epoch) setState('error', { error: (err && err.code) || 'empty_audio' });
+    if (myEpoch === epoch) {
+      setState('error', { error: (err && err.code) || 'empty_audio' });
+      callAfterError((err && err.code) || 'empty_audio');
+    }
     return;
   }
   if (myEpoch === epoch) sendTurn({ audio });
+}
+
+// ---------- call mode ----------
+
+/** Voice detection on the recorder's level (0..1, every 100 ms): end the turn after a pause. */
+function callTick(seconds, level) {
+  if (level === undefined) return; // no Web Audio: the person presses the button to send
+  const now = seconds * 1000;
+  if (!vad) vad = { floor: level, speechMs: 0, quietSince: null, heard: false };
+  if (now <= 400) {                // the first moments measure the room noise
+    vad.floor = Math.min(vad.floor, level);
+    return;
+  }
+  const speechLevel = Math.max(0.15, vad.floor * 3);
+  const quietLevel = Math.max(0.1, vad.floor * 2);
+  if (level >= speechLevel) {
+    vad.speechMs += 100;
+    vad.quietSince = null;
+    if (vad.speechMs >= CALL_MIN_SPEECH_MS) vad.heard = true;
+  } else if (level < quietLevel && vad.quietSince === null) {
+    vad.quietSince = now;
+  }
+  if (vad.heard && vad.quietSince !== null && now - vad.quietSince >= CALL_SILENCE_MS) {
+    finishListening();
+  } else if (!vad.heard && now >= CALL_NO_SPEECH_MS) {
+    endCall();
+  }
+}
+
+function startCall() {
+  callActive = true;
+  callMisses = 0;
+  startListening('call');
+}
+
+function endCall() {
+  callActive = false;
+  vad = null;
+  if (mic) cancelListening();
+  if (state === 'listening') setState('idle');
+}
+
+/** Open the mic again for the next turn, if the call is still on and nothing else is happening. */
+function callRelisten(delay = CALL_RELISTEN_MS) {
+  if (!callActive) return;
+  setTimeout(() => {
+    if (callActive && !mic && !inFlight && state !== 'thinking' && state !== 'speaking') startListening('call');
+  }, delay);
+}
+
+/** No speech recognised: try again twice, then end the call. Other errors end the call. */
+function callAfterError(code) {
+  if (!callActive) return;
+  if ((code === 'no_speech' || code === 'empty_audio') && ++callMisses <= 2) callRelisten(1200);
+  else endCall();
 }
 
 function cancelListening() {
@@ -134,6 +210,7 @@ async function sendTurn(turn, { echo = true } = {}) {
   } catch (err) {
     if (myEpoch !== epoch || (err && err.code === 'aborted')) return;
     setState('error', { error: (err && err.code) || 'internal' });
+    callAfterError((err && err.code) || 'internal');
     return;
   } finally {
     if (inFlight === ctrl) inFlight = null;
@@ -141,6 +218,7 @@ async function sendTurn(turn, { echo = true } = {}) {
   if (myEpoch !== epoch) return;
 
   lastTurn = null;
+  callMisses = 0;
   if (reply.session_id) sessionId = reply.session_id;
   if (reply.detected_language === 'de' || reply.detected_language === 'en') replyLang = reply.detected_language;
   if (!turn.text && reply.transcript) ui.addUser(reply.transcript);
@@ -154,12 +232,16 @@ async function sendTurn(turn, { echo = true } = {}) {
 async function speak(url, text) {
   if (!url && !text) {
     setState('idle');
+    callRelisten();
     return;
   }
   const id = ++speakId;
   setState('speaking');
   await player.play(url, text, speechLang());
-  if (id === speakId) setState('idle');
+  if (id === speakId) {
+    setState('idle');
+    callRelisten(); // call mode: the next turn starts by itself
+  }
 }
 
 function stopPlayback() {
@@ -169,6 +251,8 @@ function stopPlayback() {
 }
 
 function startOver() {
+  callActive = false;
+  vad = null;
   epoch++;
   if (inFlight) {
     inFlight.abort();
@@ -188,8 +272,28 @@ function startOver() {
 
 const busy = () => state === 'thinking' || inFlight !== null;
 
+/** Call mode button: start the call / send now while listening / interrupt while speaking. */
+function callPress() {
+  player.unlock();
+  if (busy()) return;
+  if (!callActive) {
+    startCall();
+    return;
+  }
+  if (mic) {
+    ignoreUp = true;
+    finishListening();
+    return;
+  }
+  startListening('call'); // barge-in while the assistant speaks
+}
+
 ui.init({
   talkDown() {
+    if (CALL) {
+      callPress();
+      return;
+    }
     player.unlock();
     if (busy()) return;
     if (mic) {
@@ -213,6 +317,10 @@ ui.init({
     else finishListening();
   },
   talkToggle() {
+    if (CALL) {
+      callPress();
+      return;
+    }
     player.unlock();
     if (busy()) return;
     if (mic) finishListening();
@@ -232,6 +340,7 @@ ui.init({
     speak(audioUrl, text);
   },
   stop() {
+    if (callActive) endCall(); // Esc / Stop ends the call
     if (state === 'speaking' || player.isPlaying()) stopPlayback();
   },
   startOver,

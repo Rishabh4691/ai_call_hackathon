@@ -11,7 +11,7 @@ from pathlib import Path
 
 import openpyxl
 
-from .config import DATA_DIR, DB_PATH, XLSX_PATH
+from .config import DATA_DIR, DB_PATH, OFFICIAL_XLSX_PATH, SERVICE_DATA, XLSX_PATH
 from .geo import region_of_city
 
 NOT_STATED = "Not stated in source"
@@ -145,6 +145,8 @@ def build(xlsx=XLSX_PATH, db=DB_PATH):
     con = sqlite3.connect(db)
     con.executescript(SCHEMA)
 
+    if SERVICE_DATA == "official" and OFFICIAL_XLSX_PATH.exists():
+        services = []  # only the official Caritas list; the workbook still provides the topics
     for s in services:
         s["kind"] = "hotline" if (s["city"] or "").strip().lower() == "nationwide" else "local"
         s["region"] = region_of_city(s["city"])
@@ -159,6 +161,24 @@ def build(xlsx=XLSX_PATH, db=DB_PATH):
         con.execute(f"INSERT INTO services ({','.join(cols)}) VALUES ({','.join('?' * len(cols))})", [s[c] for c in cols])
         for tid in CATEGORY_TOPICS[s["category"]]:
             con.execute("INSERT OR IGNORE INTO service_topics VALUES (?,?)", (s["id"], tid))
+
+    # Official Caritas facility list: every help-relevant facility (name + address), linked to its topics.
+    official_count = 0
+    if OFFICIAL_XLSX_PATH.exists():
+        from .geocode import load_geo, region_of_county
+        from .official import load as load_official
+
+        official, official_links = load_official(OFFICIAL_XLSX_PATH, region_of_city, load_geo(), region_of_county)
+        bad = sorted({t for _, t in official_links} - topic_ids)
+        if bad:
+            raise ValueError(f"official.py refers to unknown topics: {bad}")
+        cols = ["id", "kind", "region", "category", "name", "provider", "relationship", "city", "postcode", "address",
+                "coverage", "phone", "email", "website", "contact_mode", "hours", "access_rule", "cost_note",
+                "keywords_en", "keywords_de", "confidence_note", "source_url", "last_checked", "origin", "search_text"]
+        for s in official:
+            con.execute(f"INSERT INTO services ({','.join(cols)}) VALUES ({','.join('?' * len(cols))})", [s[c] for c in cols])
+        con.executemany("INSERT OR IGNORE INTO service_topics VALUES (?,?)", official_links)
+        official_count = len(official)
 
     for t in topics:
         t["search_text"] = _join(
@@ -184,6 +204,8 @@ def build(xlsx=XLSX_PATH, db=DB_PATH):
         "links": con.execute("SELECT COUNT(*) FROM service_topics").fetchone()[0],
         "availability_rules": con.execute("SELECT COUNT(*) FROM availability").fetchone()[0],
         "services_without_region": con.execute("SELECT COUNT(*) FROM services WHERE region IS NULL").fetchone()[0],
+        "official_facilities": official_count,
+        "service_data": SERVICE_DATA if OFFICIAL_XLSX_PATH.exists() else "workbook only (official list not found)",
     }
     con.close()
     return stats
