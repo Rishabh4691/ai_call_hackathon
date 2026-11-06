@@ -171,7 +171,7 @@ ai_call_hackathon/
 | Retrieval: embeddings, region boost, crisis detection | ✅ Working (try `python -m brain.cli "..."`) |
 | Conversation logic `brain/navigator.py` | 🚧 Stub: returns a placeholder, not yet connected to retrieval |
 | Service data `backend/data/Data_caritas_expanded.xlsx` | ⚠️ Not in the repo, add it to run retrieval |
-| Frontend | 📝 Planned, see [`docs/Frontend_Spec_AI_Service_Navigator.pdf`](docs/Frontend_Spec_AI_Service_Navigator.pdf) |
+| Frontend | 📝 Planned, see [`docs/Frontend_Spec_AI_Service_Navigator.pdf`](docs/Frontend_Spec_AI_Service_Navigator.pdf) · design concept screenshots in [`docs/frontend-concept`](docs/frontend-concept/) |
 
 <details>
 <summary><b>Backend ownership</b></summary>
